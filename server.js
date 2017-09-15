@@ -1,17 +1,34 @@
 const net = require('net');
+const fs = require('fs');
 const port = 8124;
 
-const server = net.createServer((client) => {
-    console.log('Client connected');
+let increment = 0;
+let qa = JSON.parse(fs.readFileSync('qa.json').toString());
 
+const Incoming = {
+    'QA': () => {
+
+    }
+};
+
+const server = net.createServer((client) => {
+    client.id = ++increment;
     client.setEncoding('utf8');
 
+    console.log(`Client with id ${client.id} connected`);
+
     client.on('data', (data) => {
-        console.log(data);
-        client.write('\r\nHello!\r\nRegards,\r\nServer\r\n');
+        if(data in Incoming){
+            Incoming[data].call();
+        }
+        else{
+            console.log('Unknown command');
+        }
     });
 
-    client.on('end', () => console.log('Client disconnected'));
+    client.on('end', () => {
+        console.log('Client disconnected')
+    });
 });
 
 server.listen(port, () => {
