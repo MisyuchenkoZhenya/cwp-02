@@ -1,5 +1,3 @@
-
-
 function findQuestion(question, qa){
     for(let i = 0; i < qa.length; i++){
         if(qa[i].q === question){

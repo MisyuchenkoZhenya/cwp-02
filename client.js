@@ -1,6 +1,6 @@
 const net = require('net');
 const fs = require('fs');
-const sh = require('./shuffle_alg');
+const sh = require('./helpers/shuffle_alg');
 const port = 8124;
 
 let qa = readJson();
