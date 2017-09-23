@@ -43,7 +43,7 @@ const server = net.createServer((client) => {
     });
 });
 
-server.listen(port, () => {
+server.listen({host: 'localhost', port: port, exclusive: true},  () => {
     console.log(`Server listening on localhost:${port}`);
 });
 
@@ -66,12 +66,7 @@ function sendAnswer(client, question, qa){
     let answer = '';
 
     const rand = Math.floor(Math.random() * (qa.length));
-    if(rand % 2 === 0){
-        answer = sh.getAnswer(question, qa);
-    }
-    else{
-        answer = qa[rand].a;
-    }
+    answer = rand % 2 === 0 ? sh.getAnswer(question, qa) : qa[rand].a;
     
     LOG(pathToLog, `Qestion: ${question}` + '\n\t\t' + `Answer: ${answer}`);
     client.write(answer);

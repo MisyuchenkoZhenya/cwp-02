@@ -18,7 +18,7 @@ const Incoming = {
     },
 };
 
-client.connect(port, () => {
+client.connect({host: 'localhost', port: port}, () => {
     client.write('QA');
 });
 
