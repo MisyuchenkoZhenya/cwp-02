@@ -1,12 +1,12 @@
 const net = require('net');
 const fs = require('fs');
 const path = require('path');
-const logOut = require('./helpers/path_creater')
-const sh = require('./helpers/server_helper')
+const uid = require('uid');
+const logOut = require('./helpers/path_creater');
+const sh = require('./helpers/server_helper');
 const port = 8124;
 
 let qa = readJson();
-let increment = 0;
 
 const Incoming = {
     'QA': (client, pathToLog) => {
@@ -19,7 +19,7 @@ const Incoming = {
 };
 
 const server = net.createServer((client) => {
-    client.id = ++increment;
+    client.id = uid();
     client.setEncoding('utf8');
     const pathToLog = logOut.getLogPath(client, fs.realpathSync(''));   
     fs.writeFileSync(pathToLog, '');
