@@ -7,7 +7,6 @@ const port = 8124;
 
 let qa = readJson();
 let increment = 0;
-let pathToLog = '';
 
 const Incoming = {
     'QA': (client, pathToLog) => {
@@ -22,7 +21,7 @@ const Incoming = {
 const server = net.createServer((client) => {
     client.id = ++increment;
     client.setEncoding('utf8');
-    pathToLog = logOut.getLogPath(client, fs.realpathSync(''));   
+    const pathToLog = logOut.getLogPath(client, fs.realpathSync(''));   
     fs.writeFileSync(pathToLog, '');
 
     client.on('data', (data) => {
@@ -30,7 +29,7 @@ const server = net.createServer((client) => {
             Incoming[data](client, pathToLog);
         }
         else if(sh.findQuestion(data, qa)){
-            sendAnswer(client, data, qa);
+            sendAnswer(pathToLog, client, data, qa);
         }
         else{
             console.log('Unknown command');
@@ -49,10 +48,10 @@ server.listen({host: 'localhost', port: port, exclusive: true},  () => {
 
 function LOG(pathToLog, message) {
     date = new Date();
-    fs.appendFileSync(pathToLog, date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() +
+    fs.appendFile(pathToLog, date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() +
                         ' - ' + message + '\n', (err) => {
-        if(error){
-            console.error(err.toString());
+        if(err){
+            console.err(err.toString());
         }
     });
 }
@@ -62,7 +61,7 @@ function readJson(){
     return data['QA'];
 }
 
-function sendAnswer(client, question, qa){
+function sendAnswer(pathToLog, client, question, qa){
     let answer = '';
 
     const rand = Math.floor(Math.random() * (qa.length));

@@ -8,5 +8,5 @@ function getCountFromArgv(){
 }
 
 for(let i = 0; i < count; i++){
-    const spawn = child_process.spawnSync('node', ['./client.js', i]);
+    const spawn = child_process.spawn('node', ['./client.js', i]);
 }
